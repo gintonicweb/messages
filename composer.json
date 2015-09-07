@@ -1,5 +1,5 @@
 {
-    "name": "gintonicweb/Messages",
+    "name": "gintonicweb/messages",
     "description": "Messages plugin for CakePHP",
     "type": "cakephp-plugin",
     "require": {
@@ -16,7 +16,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Messages\\Test\\": "tests"
+            "messages\\Test\\": "tests"
         }
     }
 }
