@@ -60,21 +60,18 @@ class ThreadsTable extends Table
     }
 
     /**
-     * Dynamic finder that find threads where a given set of users are
-     * participants
+     * Dynamic finder that loads all users for a thread without me
      *
      * @param \Cake\ORM\Query $query the original query to append to
-     * @param array $users the list of users id formatted according to cake stadards
+     * @param array $users the list of users to be ignored
      * @return \Cake\ORM\Query The amended query
      */
-    public function findWithUsers(Query $query, array $users)
+    public function findOtherUsers(Query $query, array $users)
     {
         return $query
-            ->matching('Users', function ($q) use ($users) {
-                return $q
-                    ->select(['Threads.id'])
-                    ->where(['Users.id IN' => $users]);
-            });
+            ->contain(['Users' => function ($q) use ($users) {
+                return $q->where(['Users.id NOT IN' => $users]);
+            }]);
     }
 
     /**
@@ -85,18 +82,16 @@ class ThreadsTable extends Table
      * @param array $users the list of users id formatted according to cake stadards
      * @return \Cake\ORM\Query The amended query
      */
-    public function getSummary($userId)
+    public function findSummary(Query $query, array $users)
     {
         // Retrieve the last visible (not deleted) message for user per thread
-        $messages = $this->Messages->getRecent($userId);
+        $messages = $this->Messages->getRecent($users[0]);
 
-        $threads = $this->find()
-            ->contain(['Users'])
+        return $query
+            ->find('otherUsers', $users)
             ->matching('Messages', function($q) use ($messages) {
                 return $q->where(['Messages.id IN' => $messages]);
             });
-
-        return $threads;
     }
 
 }
