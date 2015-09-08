@@ -76,4 +76,27 @@ class ThreadsTable extends Table
                     ->where(['Users.id IN' => $users]);
             });
     }
+
+    /**
+     * Dynamic finder to restrict the query where at least some undeleted messages
+     * exist in the thread
+     *
+     * @param \Cake\ORM\Query $query the original query to append to
+     * @param array $users the list of users id formatted according to cake stadards
+     * @return \Cake\ORM\Query The amended query
+     */
+    public function getSummary($userId)
+    {
+        // Retrieve the last visible (not deleted) message for user per thread
+        $messages = $this->Messages->getRecent($userId);
+
+        $threads = $this->find()
+            ->contain(['Users'])
+            ->matching('Messages', function($q) use ($messages) {
+                return $q->where(['Messages.id IN' => $messages]);
+            });
+
+        return $threads;
+    }
+
 }

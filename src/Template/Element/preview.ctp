@@ -4,4 +4,4 @@
 <?php foreach($thread->users as $user) : ?>
     <?= $user->first ?>
 <?php endforeach ?>
-<p><?= $thread->messages[0]->body ?></p>
+<p><?= $thread->_matchingData['Messages']['body'] ?></p>

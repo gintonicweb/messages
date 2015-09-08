@@ -34,7 +34,7 @@
             ]) ?>
                 <?= $this->Form->input('thread_id', [
                     'type' => 'hidden',
-                    'value' => $messages->first()->thread_id
+                    'value' => $thread_id
                 ]) ?>
                 <div class="input-group">
                     <input id="body" name="body" type="text" class="form-control" placeholder="Your message...">

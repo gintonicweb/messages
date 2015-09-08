@@ -20,28 +20,16 @@ class ThreadsController extends AppController
      */
     public function view($id = null)
     {
-        $threads = $this->Threads
-            ->find()
-            ->contain([
-                'Users',
-                 'Messages' => function ($q){
-                     // TODO: get a single message per thread
-                     return $q->order('created DESC');
-                }
-            ])
-            ->find('withUsers', [$this->Auth->user('id')]);
-
-        $id = isset($id)? $id : $threads->first()->id;
-        // TODO: handle no threads
-        
+        $threads = $this->Threads->getSummary($this->Auth->user('id'));
         $messages = $this->Threads->Messages
             ->find()
             ->contain(['Threads', 'Users'])
             ->where(['Threads.id' => $id]);
 
+        $this->set('thread_id', $id);
         $this->set('threads', $this->paginate($threads));
         $this->set('messages', $this->paginate($messages));
-        $this->set('_serialize', ['threads']);
+        $this->set('_serialize', ['threads', 'messages']);
     }
 
     /**

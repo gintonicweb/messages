@@ -1,9 +1,11 @@
 <?php
 namespace Messages\Model\Table;
 
+use Cake\Datasource\ConnectionManager;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
+use Cake\Utility\Hash;
 use Cake\Validation\Validator;
 use Messages\Model\Entity\Message;
 
@@ -80,5 +82,35 @@ class MessagesTable extends Table
         $rules->add($rules->existsIn(['user_id'], 'Users'));
         $rules->add($rules->existsIn(['thread_id'], 'Threads'));
         return $rules;
+    }
+
+    // TODO: figure how to do this with cakephps ORM
+    // ref: http://www.xaprb.com/blog/2006/12/07/how-to-select-the-firstleastmax-row-per-group-in-sql/
+    public function getRecent($userId)
+    {
+        // TODO: use constants in the entity
+        $deleted = 2;
+        $connection = ConnectionManager::get('default');
+        $ids = $connection->execute('
+            SELECT 
+                messages.id
+            FROM (
+                SELECT 
+                    messages.thread_id, 
+                    max(messages.created) as created
+                FROM message_read_statuses
+                JOIN messages
+                    ON message_read_statuses.message_id = messages.id
+                WHERE message_read_statuses.user_id = ' . $userId . '
+                    AND message_read_statuses.status != ' . $deleted . '
+                GROUP BY messages.thread_id
+            ) AS visibles 
+            INNER JOIN threads
+                ON visibles.thread_id = threads.id
+            INNER JOIN messages
+                ON visibles.thread_id = messages.thread_id
+                AND visibles.created = messages.created
+        ')->fetchAll('assoc');
+        return Hash::extract($ids, '{n}.id');
     }
 }
