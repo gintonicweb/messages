@@ -8,6 +8,7 @@ use Cake\ORM\Table;
 use Cake\Utility\Hash;
 use Cake\Validation\Validator;
 use Messages\Model\Entity\Message;
+use Messages\Model\Entity\MessageReadStatus;
 
 /**
  * Messages Model
@@ -88,8 +89,6 @@ class MessagesTable extends Table
     // ref: http://www.xaprb.com/blog/2006/12/07/how-to-select-the-firstleastmax-row-per-group-in-sql/
     public function getRecent($userId)
     {
-        // TODO: use constants in the entity
-        $deleted = 2;
         $connection = ConnectionManager::get('default');
         $ids = $connection->execute('
             SELECT 
@@ -102,7 +101,7 @@ class MessagesTable extends Table
                 JOIN messages
                     ON message_read_statuses.message_id = messages.id
                 WHERE message_read_statuses.user_id = ' . $userId . '
-                    AND message_read_statuses.status != ' . $deleted . '
+                    AND message_read_statuses.status != ' . MessageReadStatus::TYPE_DELETED . '
                 GROUP BY messages.thread_id
             ) AS visibles 
             INNER JOIN threads

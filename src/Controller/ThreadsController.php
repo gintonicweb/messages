@@ -54,6 +54,8 @@ class ThreadsController extends AppController
             $recipient = $this->Threads->Users
                 ->get($this->request->data['user']);
 
+            $this->Threads->patchEntity($thread, [$this->request->data['thread']]);
+
             if ($this->Threads->save($thread)) {
 
                 $this->Threads->Users->link($thread, [$sender, $recipient]);

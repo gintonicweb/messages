@@ -6,7 +6,7 @@
             <hr>
             <?= $this->Form->create() ?>
             <?= $this->Form->input('user') ?>
-            <?= $this->Form->input('threads.title') ?>
+            <?= $this->Form->input('thread.title') ?>
             <?= $this->Form->input('message.body') ?>
             <?= $this->Form->submit('Send', ['class' => 'btn btn-primary']) ?>
             <?= $this->Form->end() ?>
@@ -28,7 +28,7 @@
             <div class="content-frame-right">
                 <div class="list-group list-group-contacts border-bottom push-down-10">
                     <?php for ($i=0; $i<8; $i++) : ?>
-                        <a href="#" class="list-group-item">         
+                        <a href="#" class="list-group-item">
                             <i class="fa fa-circle-o"></i>
                             <?php //h($thread->created) ?>
                             <img src="/messages/img/avatar.jpg" class="pull-left img-circle" alt="Jason Statham" style="margin:0 10px;">
