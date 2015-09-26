@@ -11,30 +11,69 @@ use Cake\ORM\TableRegistry;
  */
 class ThreadsController extends AppController
 {
+    public $paginate = [
+        'limit' => 5,
+    ];
+
     /**
      * View method
      *
-     * @param string|null $id Thread id.
      * @return void
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
-    public function view($id = null)
+    public function index()
     {
+        $threads = $this->Threads->find('summary', [$this->Auth->user('id')]);
+        $id = $threads->select('id')->first()->id;
+        $this->set('id', $id);
+        $this->set('_serialize', ['id']);
+    }
+
+    /**
+     * View method
+     *
+     * @return void
+     * @throws \Cake\Network\Exception\NotFoundException When record not found.
+     */
+    public function view()
+    {
+        if (isset($this->request->data['id'])) {
+            $id = $this->request->data['id'];
+        } else {
+            $threads = $this->Threads->find('summary', [$this->Auth->user('id')]);
+            $id = $threads->select('id')->first()->id;
+        }
+
         $thread = $this->Threads
             ->find('otherUsers', [$this->Auth->user('id')])
             ->where(['Threads.id' => $id])
             ->first();
 
-        $threads = $this->Threads->find('summary', [$this->Auth->user('id')]);
         $messages = $this->Threads->Messages
             ->find()
             ->contain(['Users'])
             ->where(['Messages.thread_id' => $id]);
 
         $this->set('thread', $thread);
-        $this->set('threads', $this->paginate($threads));
         $this->set('messages', $this->paginate($messages));
-        $this->set('_serialize', ['messages', 'thread', 'threads']);
+        $this->set('_serialize', ['messages', 'thread']);
+    }
+
+    /**
+     * Summary method
+     *
+     * @param string|null $id Thread id.
+     * @return void
+     * @throws \Cake\Network\Exception\NotFoundException When record not found.
+     */
+    public function summary() 
+    {
+        $threads = $this->Threads->find('summary', [$this->Auth->user('id')]);
+        if ($threads->count() < 1) {
+            // TODO: something about that
+        }
+        $this->set('threads', $this->paginate($threads));
+        $this->set('_serialize', ['threads']);
     }
 
     /**
@@ -47,23 +86,11 @@ class ThreadsController extends AppController
         $thread = $this->Threads->newEntity();
 
         if ($this->request->is('post')) {
+            $userId = $this->Auth->user('id');
 
-            $sender = $this->Threads->Users
-                ->get($this->request->session()->read('Auth.User.id'));
-
-            $recipient = $this->Threads->Users
-                ->get($this->request->data['user']);
-
-            $this->Threads->patchEntity($thread, [$this->request->data['thread']]);
-
-            if ($this->Threads->save($thread)) {
-
-                $this->Threads->Users->link($thread, [$sender, $recipient]);
-                $thread->addMessage($sender, $this->request->data['message']);
-
+            if ($this->Threads->open($thread, $userId, $this->request->data)) {
                 $this->Flash->success(__('The thread has been saved.'));
                 return $this->redirect(['action' => 'view']);
-
             } else {
                 $this->Flash->error(__('The thread could not be saved. Please, try again.'));
             }

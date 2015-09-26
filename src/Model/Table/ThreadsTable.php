@@ -40,7 +40,7 @@ class ThreadsTable extends Table
             'foreignKey' => 'thread_id',
             'targetForeignKey' => 'user_id',
             'joinTable' => 'threads_users',
-            'className' => 'Messages.Users'
+            'className' => 'Users.Users'
         ]);
     }
 
@@ -75,8 +75,8 @@ class ThreadsTable extends Table
     }
 
     /**
-     * Dynamic finder to restrict the query where at least some undeleted messages
-     * exist in the thread
+     * Dynamic finder to restrict the query where at least some undeleted 
+     * messages exist in the thread
      *
      * @param \Cake\ORM\Query $query the original query to append to
      * @param array $users the list of users id formatted according to cake stadards
@@ -94,4 +94,25 @@ class ThreadsTable extends Table
             });
     }
 
+    /**
+     * Links the sender and reciever to the thread then adds the message
+     *
+     * @param \Cake\ORM\Query $query the original query to append to
+     * @param array $users the list of users id formatted according to cake stadards
+     * @return \Cake\ORM\Query The amended query
+     */
+    public function open(Thread $thread, $userId, $data)
+    {
+        $sender = $this->Users->get($userId);
+        $recipient = $this->Users->get($data['user']);
+        $this->patchEntity($thread, [$data['thread']]);
+
+        if (!$this->save($thread)) {
+            return false;
+        }
+
+        $this->Users->link($thread, [$sender, $recipient]);
+        $thread->addMessage($sender, $data['message']);
+        return true;
+    }
 }
