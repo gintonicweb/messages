@@ -62,11 +62,10 @@ class ThreadsController extends AppController
     /**
      * Summary method
      *
-     * @param string|null $id Thread id.
      * @return void
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
-    public function summary() 
+    public function summary()
     {
         $threads = $this->Threads->find('summary', [$this->Auth->user('id')]);
         if ($threads->count() < 1) {

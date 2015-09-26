@@ -15,10 +15,15 @@ class MessageReadStatus extends Entity
     const TYPE_DELETED = 2;
 
     /**
-     * static enum: DescriptorChoice::types()
-     * @access static
+     * The main method for any enumeration, should be called statically
+     * Now also supports reordering/filtering
+     *
+     * @link http://www.dereuromark.de/2010/06/24/static-enums-or-semihardcoded-attributes/
+     * @param string $value or array $keys or NULL for complete array result
+     * @return mixed string/array
      */
-     public static function types($value = null) {
+    public static function types($value = null)
+    {
         $options = [
             self::TYPE_UNREAD => 'unread',
             self::TYPE_READ => 'read',

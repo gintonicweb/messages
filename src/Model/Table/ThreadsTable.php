@@ -75,7 +75,7 @@ class ThreadsTable extends Table
     }
 
     /**
-     * Dynamic finder to restrict the query where at least some undeleted 
+     * Dynamic finder to restrict the query where at least some undeleted
      * messages exist in the thread
      *
      * @param \Cake\ORM\Query $query the original query to append to
@@ -89,7 +89,7 @@ class ThreadsTable extends Table
 
         return $query
             ->find('otherUsers', $users)
-            ->matching('Messages', function($q) use ($messages) {
+            ->matching('Messages', function ($q) use ($messages) {
                 return $q->where(['Messages.id IN' => $messages]);
             });
     }

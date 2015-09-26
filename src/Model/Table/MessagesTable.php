@@ -85,8 +85,15 @@ class MessagesTable extends Table
         return $rules;
     }
 
-    // TODO: figure how to do this with cakephps ORM
-    // ref: http://www.xaprb.com/blog/2006/12/07/how-to-select-the-firstleastmax-row-per-group-in-sql/
+    /**
+     * Gets a list of recently updated threads and messages
+     *
+     * @todo figure how to do this with cakephps ORM
+     *
+     * @link http://www.xaprb.com/blog/2006/12/07/how-to-select-the-firstleastmax-row-per-group-in-sql/
+     * @param int $userId user id
+     * @return array list of recent threads
+     */
     public function getRecent($userId)
     {
         $connection = ConnectionManager::get('default');
