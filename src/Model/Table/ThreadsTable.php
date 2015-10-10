@@ -96,16 +96,12 @@ class ThreadsTable extends Table
 
     /**
      * Links the sender and reciever to the thread then adds the message
-     *
-     * @param \Cake\ORM\Query $query the original query to append to
-     * @param array $users the list of users id formatted according to cake stadards
-     * @return \Cake\ORM\Query The amended query
      */
-    public function open(Thread $thread, $userId, $data)
+    public function open($userId, $data)
     {
         $sender = $this->Users->get($userId);
         $recipient = $this->Users->get($data['user']);
-        $this->patchEntity($thread, [$data['thread']]);
+        $thread = $this->newEntity($data['thread']);
 
         if (!$this->save($thread)) {
             return false;
@@ -113,6 +109,6 @@ class ThreadsTable extends Table
 
         $this->Users->link($thread, [$sender, $recipient]);
         $thread->addMessage($sender, $data['message']);
-        return true;
+        return $thread;
     }
 }

@@ -18,6 +18,7 @@ class ThreadsFixture extends TestFixture
     // @codingStandardsIgnoreStart
     public $fields = [
         'id' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => false, 'default' => null, 'comment' => '', 'autoIncrement' => true, 'precision' => null],
+        'title' => ['type' => 'string', 'length' => 255, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null, 'fixed' => null],
         'created' => ['type' => 'datetime', 'length' => null, 'null' => true, 'default' => null, 'comment' => '', 'precision' => null],
         'modified' => ['type' => 'datetime', 'length' => null, 'null' => true, 'default' => null, 'comment' => '', 'precision' => null],
         '_constraints' => [
@@ -37,6 +38,7 @@ class ThreadsFixture extends TestFixture
      */
     public $records = [
         [
+            'title' => 'Lorem ipsum dolor sit amet',
             'created' => '2015-10-10 03:38:20',
             'modified' => '2015-10-10 03:38:20'
         ],

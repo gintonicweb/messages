@@ -45,11 +45,6 @@ class Messages extends AbstractMigration
                 'limit' => 11,
                 'null' => false,
             ])
-            ->addColumn('title', 'string', [
-                'default' => null,
-                'limit' => 50,
-                'null' => false,
-            ])
             ->addColumn('body', 'text', [
                 'default' => null,
                 'limit' => null,
@@ -63,6 +58,11 @@ class Messages extends AbstractMigration
             ->create();
         $table = $this->table('threads');
         $table
+            ->addColumn('title', 'string', [
+                'default' => null,
+                'limit' => 255,
+                'null' => true,
+            ])
             ->addColumn('created', 'datetime', [
                 'default' => null,
                 'limit' => null,

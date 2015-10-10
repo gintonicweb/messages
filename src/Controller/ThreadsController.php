@@ -82,20 +82,21 @@ class ThreadsController extends AppController
      */
     public function add()
     {
-        $thread = $this->Threads->newEntity();
-
         if ($this->request->is('post')) {
             $userId = $this->Auth->user('id');
-
-            if ($this->Threads->open($thread, $userId, $this->request->data)) {
-                $this->Flash->success(__('The thread has been saved.'));
-                return $this->redirect(['action' => 'view']);
-            } else {
-                $this->Flash->error(__('The thread could not be saved. Please, try again.'));
-            }
+            $thread = $this->Threads->open($userId, $this->request->data);
+            if ($thread) {
+                $this->set([
+                    'success' => true,
+                    'data' => ['id' => $thread->id],
+                    '_serialize' => ['success', 'data']
+                ]);
+                return;
+            } 
         }
-        $users = $this->Threads->Users->find('list', ['limit' => 200]);
-        $this->set(compact('thread', 'users'));
-        $this->set('_serialize', ['thread']);
+        $this->set([
+            'success' => false,
+            '_serialize' => ['success']
+        ]);
     }
 }
