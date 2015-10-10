@@ -112,8 +112,8 @@ ini_set('intl.default_locale', 'en_US');
 
 Router::reload();
 Cake\Routing\DispatcherFactory::add('Routing');
-Cake\Routing\DispatcherFactory::add('ControllerFactory');
-Plugin::load('Users', [
+Plugin::load('Messages', [
     'path' => ROOT . DS,
     'routes' => true
 ]);
+Cake\Routing\DispatcherFactory::add('ControllerFactory');
