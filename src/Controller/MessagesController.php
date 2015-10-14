@@ -11,7 +11,7 @@ use App\Controller\AppController;
 class MessagesController extends AppController
 {
     /**
-     * Add method (via json).
+     * Add method 
      *
      * @return void Redirects on successful add, renders view otherwise.
      */
@@ -32,7 +32,7 @@ class MessagesController extends AppController
         $this->set(compact('status'));
         $this->set('_serialize', ['status']);
         $this->set('_ws', [
-            'users' => $this->Messages->Users->find()->all()->toArray(),
+            'users' => $this->Messages->Users->find()->all(),
             'data' => $message->toArray()
         ]);
     }

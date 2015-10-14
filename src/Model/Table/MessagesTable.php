@@ -31,7 +31,7 @@ class MessagesTable extends Table
         parent::initialize($config);
 
         $this->table('messages');
-        $this->displayField('title');
+        $this->displayField('body');
         $this->primaryKey('id');
 
         $this->addBehavior('Timestamp');
