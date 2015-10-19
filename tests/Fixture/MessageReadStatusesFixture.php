@@ -46,5 +46,26 @@ class MessageReadStatusesFixture extends TestFixture
             'created' => '2015-10-10 03:42:07',
             'modified' => '2015-10-10 03:42:07'
         ],
+        [
+            'message_id' => 1,
+            'user_id' => 2,
+            'status' => 1,
+            'created' => '2015-10-10 03:42:07',
+            'modified' => '2015-10-10 03:42:07'
+        ],
+        [
+            'message_id' => 2,
+            'user_id' => 1,
+            'status' => 0,
+            'created' => '2015-10-10 03:42:07',
+            'modified' => '2015-10-10 03:42:07'
+        ],
+        [
+            'message_id' => 2,
+            'user_id' => 2,
+            'status' => 0,
+            'created' => '2015-10-10 03:42:07',
+            'modified' => '2015-10-10 03:42:07'
+        ],
     ];
 }

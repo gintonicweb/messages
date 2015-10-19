@@ -2,6 +2,7 @@
 namespace Messages\Controller;
 
 use App\Controller\AppController;
+use Cake\Network\Exception\UnauthorizedException;
 use Cake\ORM\TableRegistry;
 
 /**
@@ -23,40 +24,20 @@ class ThreadsController extends AppController
      */
     public function index()
     {
-        $threads = $this->Threads->find('summary', [$this->Auth->user('id')]);
-        $id = $threads->select('id')->first()->id;
-        $this->set('id', $id);
-        $this->set('_serialize', ['id']);
-    }
-
-    /**
-     * View method
-     *
-     * @return void
-     * @throws \Cake\Network\Exception\NotFoundException When record not found.
-     */
-    public function view()
-    {
-        if (isset($this->request->data['id'])) {
-            $id = $this->request->data['id'];
-        } else {
-            $threads = $this->Threads->find('summary', [$this->Auth->user('id')]);
-            $id = $threads->select('id')->first()->id;
+        $userId = $this->Auth->user('id');
+        if (!$userId) {
+            throw new UnauthorizedException('You need to be authenticated to access this section');
         }
 
-        $thread = $this->Threads
-            ->find('otherUsers', [$this->Auth->user('id')])
-            ->where(['Threads.id' => $id])
-            ->first();
+        $threads = $this->Threads->find('summary', [$userId]);
+        $thread = $threads->select('id')->first();
 
-        $messages = $this->Threads->Messages
-            ->find()
-            ->contain(['Users'])
-            ->where(['Messages.thread_id' => $id]);
-
-        $this->set('thread', $thread);
-        $this->set('messages', $this->paginate($messages));
-        $this->set('_serialize', ['messages', 'thread']);
+        $id = null;
+        if ($thread) {
+            $id = $thread->id;
+        }
+        $this->set('id', $id);
+        $this->set('_serialize', ['id']);
     }
 
     /**
@@ -91,6 +72,9 @@ class ThreadsController extends AppController
                     'data' => ['id' => $thread->id],
                     '_serialize' => ['success', 'data']
                 ]);
+                if (!$this->request->params['isAjax']) {
+                    $this->setAction('index');
+                }
                 return;
             } 
         }

@@ -1,7 +1,7 @@
 <?php
-namespace Messages\Controller;
+namespace Messages\Controller\Api;
 
-use App\Controller\AppController;
+use App\Controller\Api\AppController;
 
 /**
  * Messages Controller

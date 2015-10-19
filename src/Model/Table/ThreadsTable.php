@@ -79,7 +79,8 @@ class ThreadsTable extends Table
      * messages exist in the thread
      *
      * @param \Cake\ORM\Query $query the original query to append to
-     * @param array $users the list of users id formatted according to cake stadards
+     * @param array $users the list of users id formatted according to cake 
+     * stadards
      * @return \Cake\ORM\Query The amended query
      */
     public function findSummary(Query $query, array $users)
@@ -99,15 +100,17 @@ class ThreadsTable extends Table
      */
     public function open($userId, $data)
     {
-        $sender = $this->Users->get($userId);
-        $recipient = $this->Users->get($data['user']);
         $thread = $this->newEntity($data['thread']);
-
         if (!$this->save($thread)) {
             return false;
         }
 
-        $this->Users->link($thread, [$sender, $recipient]);
+        $sender = $this->Users->get($userId);
+        $recipients = $this->Users->find()
+            ->where(['id IN' => $data['users']])
+            ->toArray();
+
+        $this->Users->link($thread, $recipients + [$sender]);
         $thread->addMessage($sender, $data['message']);
         return $thread;
     }

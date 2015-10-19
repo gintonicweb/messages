@@ -42,5 +42,10 @@ class ThreadsUsersFixture extends TestFixture
             'user_id' => 1,
             'created' => '2015-10-10 03:40:55'
         ],
+        [
+            'thread_id' => 1,
+            'user_id' => 2,
+            'created' => '2015-10-10 03:40:55'
+        ],
     ];
 }

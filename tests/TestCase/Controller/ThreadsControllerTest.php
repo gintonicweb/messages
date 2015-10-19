@@ -41,6 +41,27 @@ class ThreadsControllerTest extends IntegrationTestCase
      *
      * @return void
      */
+    public function testIndex()
+    {
+        $this->session([
+            'Auth' => [
+                'User' => [
+                    'id' => 1
+                ]
+            ]
+        ]);
+        $this->get('/messages/threads/index.json');
+        $this->assertResponseOk();
+
+        $expected = json_encode(['id' => 1], JSON_PRETTY_PRINT);
+        $this->assertEquals($expected, $this->_response->body());
+    }
+    
+    /**
+     * Test add method
+     *
+     * @return void
+     */
     public function testAdd()
     {
         $this->get('/messages/threads/add.json');
