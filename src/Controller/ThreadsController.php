@@ -41,22 +41,6 @@ class ThreadsController extends AppController
     }
 
     /**
-     * Summary method
-     *
-     * @return void
-     * @throws \Cake\Network\Exception\NotFoundException When record not found.
-     */
-    public function summary()
-    {
-        $threads = $this->Threads->find('summary', [$this->Auth->user('id')]);
-        if ($threads->count() < 1) {
-            // TODO: something about that
-        }
-        $this->set('threads', $this->paginate($threads));
-        $this->set('_serialize', ['threads']);
-    }
-
-    /**
      * Add method
      *
      * @return void Redirects on successful add, renders view otherwise.
