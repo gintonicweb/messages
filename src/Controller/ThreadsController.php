@@ -22,20 +22,21 @@ class ThreadsController extends AppController
      * @return void
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
-    public function index()
+    public function index($id = null)
     {
         $userId = $this->Auth->user('id');
         if (!$userId) {
             throw new UnauthorizedException('You need to be authenticated to access this section');
         }
 
-        $threads = $this->Threads->find('summary', [$userId]);
-        $thread = $threads->select('id')->first();
-
-        $id = null;
-        if ($thread) {
-            $id = $thread->id;
+        if ($id === null) {
+            $threads = $this->Threads->find('summary', [$userId]);
+            $thread = $threads->select('id')->first();
+            if ($thread) {
+                $id = $thread->id;
+            }
         }
+
         $this->set('id', $id);
         $this->set('_serialize', ['id']);
     }
