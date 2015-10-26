@@ -50,7 +50,7 @@ class ThreadsControllerTest extends IntegrationTestCase
                 ]
             ]
         ]);
-        $this->get('/messages/threads/index.json');
+        $this->get('/threads/index');
         $this->assertResponseOk();
 
         $expected = json_encode(['id' => 1], JSON_PRETTY_PRINT);
@@ -64,7 +64,7 @@ class ThreadsControllerTest extends IntegrationTestCase
      */
     public function testAdd()
     {
-        $this->get('/messages/threads/add.json');
+        $this->get('/threads/add.json');
         $this->assertResponseOk();
 
         $data = [
@@ -84,7 +84,7 @@ class ThreadsControllerTest extends IntegrationTestCase
             ]
         ]);
 
-        $this->post('/messages/threads/add.json', $data);
+        $this->post('/threads/add.json', $data);
         $this->assertResponseOk();
 
         $usersTable = TableRegistry::get('Messages.Threads');

@@ -1,8 +1,8 @@
 <?php
-namespace Messages\Test\TestCase\Controller;
+namespace Messages\Test\TestCase\Controller\Api;
 
 use Cake\TestSuite\IntegrationTestCase;
-use Messages\Controller\MessagesController;
+use Messages\Controller\Api\MessagesController;
 
 /**
  * Messages\Controller\MessagesController Test Case
