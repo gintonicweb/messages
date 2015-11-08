@@ -29,7 +29,7 @@ class MessageReadStatus extends Entity
             self::TYPE_READ => 'read',
             self::TYPE_DELETED => 'deleted',
         ];
-        return parent::enum($value, $options);
+        return self::enum($value, $options);
     }
 
     /**
