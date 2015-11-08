@@ -79,7 +79,7 @@ class ThreadsTable extends Table
      * messages exist in the thread
      *
      * @param \Cake\ORM\Query $query the original query to append to
-     * @param array $users the list of users id formatted according to cake 
+     * @param array $users the list of users id formatted according to cake
      * stadards
      * @return \Cake\ORM\Query The amended query
      */

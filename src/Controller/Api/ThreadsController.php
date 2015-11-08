@@ -63,5 +63,4 @@ class ThreadsController extends AppController
         $this->set('threads', $this->paginate($threads));
         $this->set('_serialize', ['threads']);
     }
-
 }

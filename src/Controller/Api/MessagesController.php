@@ -11,7 +11,7 @@ use App\Controller\Api\AppController;
 class MessagesController extends AppController
 {
     /**
-     * Add method 
+     * Add method
      *
      * @return void Redirects on successful add, renders view otherwise.
      */
