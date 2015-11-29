@@ -98,7 +98,7 @@ class MessagesTable extends Table
      */
     public function findStatus(Query $query, array $users = null)
     {
-        $query->contain(['MessageReadStatuses' => function($q) use ($users) {
+        $query->contain(['MessageReadStatuses' => function ($q) use ($users) {
             return $q->where(['MessageReadStatuses.user_id' => $users['id']]);
         }]);
         return $query->formatResults(function ($messages) {

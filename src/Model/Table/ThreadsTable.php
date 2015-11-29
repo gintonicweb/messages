@@ -118,8 +118,11 @@ class ThreadsTable extends Table
 
     /**
      * Links the sender and reciever to the thread then adds the message
+     * @param int $userId Id of the sender
+     * @param array $data message data
+     * @return \Cake\ORM\Entity
      */
-    public function open($userId, $data)
+    public function open($userId, array $data)
     {
         $thread = $this->newEntity($data['thread']);
         if (!$this->save($thread)) {
