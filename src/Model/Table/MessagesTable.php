@@ -65,6 +65,10 @@ class MessagesTable extends Table
             ->allowEmpty('id', 'create');
 
         $validator
+            ->requirePresence('thread_id', 'create')
+            ->notEmpty('thread_id');
+
+        $validator
             ->requirePresence('body', 'create')
             ->notEmpty('body');
 
@@ -83,6 +87,26 @@ class MessagesTable extends Table
         $rules->add($rules->existsIn(['user_id'], 'Users'));
         $rules->add($rules->existsIn(['thread_id'], 'Threads'));
         return $rules;
+    }
+
+    /**
+     * Find unread messages
+     *
+     * @param \Cake\ORM\Query $query the original query to append to
+     * @param array $users the list of users ids
+     * @return \Cake\ORM\Query The amended query
+     */
+    public function findStatus(Query $query, array $users = null)
+    {
+        $query->contain(['MessageReadStatuses' => function($q) use ($users) {
+            return $q->where(['MessageReadStatuses.user_id' => $users['id']]);
+        }]);
+        return $query->formatResults(function ($messages) {
+            return $messages->map(function ($message) {
+                $message['status'] = $message['message_read_statuses'][0]['status'];
+                return $message;
+            });
+        });
     }
 
     /**

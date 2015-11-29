@@ -63,7 +63,7 @@ class ThreadsTable extends Table
      * Dynamic finder that loads all users for a thread without me
      *
      * @param \Cake\ORM\Query $query the original query to append to
-     * @param array $users the list of users to be ignored
+     * @param array $users the list of user ids
      * @return \Cake\ORM\Query The amended query
      */
     public function findParticipating(Query $query, array $users = null)

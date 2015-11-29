@@ -30,6 +30,14 @@ class MessagesControllerTest extends IntegrationTestCase
                 ]
             ]
         ]);
+        $this->configRequest([
+            'headers' => ['Accept' => 'application/json']
+        ]);
+    }
+
+    public function tearDown()
+    {
+        TableRegistry::remove('Messages');
     }
 
     public function testAdd()

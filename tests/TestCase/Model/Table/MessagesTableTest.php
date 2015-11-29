@@ -55,7 +55,14 @@ class MessagesTableTest extends TestCase
      */
     public function testInitialize()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $belongsTo = $this->Messages->association('Users');
+        $this->assertInstanceOf('Cake\ORM\Association\BelongsTo', $belongsTo);
+
+        $belongsTo = $this->Messages->association('Threads');
+        $this->assertInstanceOf('Cake\ORM\Association\BelongsTo', $belongsTo);
+
+        $hasMany = $this->Messages->association('MessageReadStatuses');
+        $this->assertInstanceOf('Cake\ORM\Association\HasMany', $hasMany);
     }
 
     /**
@@ -65,7 +72,15 @@ class MessagesTableTest extends TestCase
      */
     public function testValidationDefault()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $data = [
+            'user_id' => 1,
+            'thread_id' => 1,
+            'body' => 'This is a new message',
+        ];
+        $message = $this->Messages->newEntity();
+        $this->Messages->patchEntity($message, $data);
+        $message = $this->Messages->save($message, $data);
+        $this->assertInstanceOf('Messages\Model\Entity\Message', $message);
     }
 
     /**
@@ -75,24 +90,42 @@ class MessagesTableTest extends TestCase
      */
     public function testBuildRules()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $data = [
+            'user_id' => 3,
+            'thread_id' => 1,
+            'body' => 'This is a new message',
+        ];
+        $message = $this->Messages->newEntity();
+        $this->Messages->patchEntity($message, $data);
+        $result = $this->Messages->save($message, $data);
+        $this->assertFalse($result);
+
+        $data = [
+            'user_id' => 1,
+            'thread_id' => 3,
+            'body' => 'This is a new message',
+        ];
+        $message = $this->Messages->newEntity();
+        $this->Messages->patchEntity($message, $data);
+        $result = $this->Messages->save($message, $data);
+        $this->assertFalse($result);
     }
 
-    /**
-     * Test findRecent method
-     *
-     * @return void
-     */
-    public function testFindRecent()
+    public function testFindStatus()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $message = $this->Messages->find()
+            ->find('status', ['id' => 1])
+            ->where(['id' => 1])
+            ->first();
+        $this->assertTrue((boolean) $message->status);
+
+        $message = $this->Messages->find()
+            ->find('status', ['id' => 2])
+            ->where(['id' => 1])
+            ->first();
+        $this->assertFalse((boolean) $message->status);
     }
 
-    /**
-     * Test getRecent method
-     *
-     * @return void
-     */
     public function testGetRecent()
     {
         $this->markTestIncomplete('Not implemented yet.');
