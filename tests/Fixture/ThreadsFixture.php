@@ -42,5 +42,10 @@ class ThreadsFixture extends TestFixture
             'created' => '2015-10-10 03:38:20',
             'modified' => '2015-10-10 03:38:20'
         ],
+        [
+            'title' => 'This is a thread with no users',
+            'created' => '2015-10-10 03:38:20',
+            'modified' => '2015-10-10 03:38:20'
+        ],
     ];
 }

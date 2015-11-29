@@ -66,6 +66,24 @@ class ThreadsTable extends Table
      * @param array $users the list of users to be ignored
      * @return \Cake\ORM\Query The amended query
      */
+    public function findParticipating(Query $query, array $users = null)
+    {
+        if (empty($users)) {
+            return $query;
+        }
+        return $query
+            ->matching('Users', function ($q) use ($users) {
+                return $q->where(['Users.id IN' => $users]);
+            });
+    }
+
+    /**
+     * Dynamic finder that loads all users for a thread without me
+     *
+     * @param \Cake\ORM\Query $query the original query to append to
+     * @param array $users the list of users to be ignored
+     * @return \Cake\ORM\Query The amended query
+     */
     public function findOtherUsers(Query $query, array $users)
     {
         return $query
@@ -88,6 +106,9 @@ class ThreadsTable extends Table
         // Retrieve the last visible (not deleted) message for user per thread
         $messages = $this->Messages->getRecent($users[0]);
 
+        if (empty($messages)) {
+            return $query;
+        }
         return $query
             ->find('otherUsers', $users)
             ->matching('Messages', function ($q) use ($messages) {
