@@ -2,6 +2,8 @@
 namespace Messages\Model\Table;
 
 use Cake\Datasource\ConnectionManager;
+use Cake\Event\Event;
+use Cake\ORM\Entity;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -89,6 +91,18 @@ class MessagesTable extends Table
         return $rules;
     }
 
+    /**
+     * BeforeSave
+     *
+     * @param \Cake\Event\Event $event Event instance.
+     * @param \Cake\ORM\Entity $entity Entity instance.
+     * @return void
+     */
+    public function beforeSave(Event $event, Entity $entity)
+    {
+        $thread = $this->Threads->get($entity->thread_id);
+        $this->Threads->touch($thread);
+    }
     /**
      * Find unread messages
      *
