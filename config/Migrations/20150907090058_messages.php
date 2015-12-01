@@ -17,9 +17,14 @@ class Messages extends AbstractMigration
                 'limit' => 11,
                 'null' => false,
             ])
-            ->addColumn('status', 'integer', [
-                'default' => 0,
-                'limit' => 11,
+            ->addColumn('read', 'boolean', [
+                'default' => false,
+                'limit' => null,
+                'null' => false,
+            ])
+            ->addColumn('deleted', 'boolean', [
+                'default' => false,
+                'limit' => null,
                 'null' => false,
             ])
             ->addColumn('created', 'datetime', [

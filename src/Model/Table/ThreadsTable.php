@@ -99,20 +99,20 @@ class ThreadsTable extends Table
      * @param array $users the list of users to be ignored
      * @return \Cake\ORM\Query The amended query
      */
-    public function findStatus(Query $query, array $users)
+    public function findReadStatus(Query $query, array $users)
     {
-        $query->contain(['Messages' =>function ($q) use ($users) {
-            return $q->find('status', $users);
+        $query->contain(['Messages' => function ($q) use ($users) {
+            return $q->find('readStatus', $users);
         }]);
         return $query->map(function ($thread) {
-            $status = false;
+            $read = false;
             foreach ($thread['messages'] as $message) {
-                if ($message['message_read_statuses'][0]['status']) {
-                    $status = true;
+                if ($message['message_read_statuses'][0]['read']) {
+                    $read = true;
                     break;
                 }
             }
-            $thread['status'] = $status;
+            $thread['read'] = $read;
             return $thread;
         });
     }

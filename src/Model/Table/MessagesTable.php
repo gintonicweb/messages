@@ -103,58 +103,24 @@ class MessagesTable extends Table
         $thread = $this->Threads->get($entity->thread_id);
         $this->Threads->touch($thread);
     }
+
     /**
-     * Find unread messages
+     * Adds the 'read' property to the messages
      *
      * @param \Cake\ORM\Query $query the original query to append to
-     * @param array $users the list of users ids
+     * @param array $users the user id like ```['id' => 1]```
      * @return \Cake\ORM\Query The amended query
      */
-    public function findStatus(Query $query, array $users = null)
+    public function findReadStatus(Query $query, array $users = null)
     {
         $query->contain(['MessageReadStatuses' => function ($q) use ($users) {
             return $q->where(['MessageReadStatuses.user_id' => $users['id']]);
         }]);
         return $query->formatResults(function ($messages) {
             return $messages->map(function ($message) {
-                $message['status'] = $message['message_read_statuses'][0]['status'];
+                $message['read'] = $message['message_read_statuses'][0]['read'];
                 return $message;
             });
         });
-    }
-
-    /**
-     * Gets a list of recently updated threads and messages
-     *
-     * @todo figure how to do this with cakephps ORM
-     *
-     * @link http://www.xaprb.com/blog/2006/12/07/how-to-select-the-firstleastmax-row-per-group-in-sql/
-     * @param int $userId user id
-     * @return array list of recent threads
-     */
-    public function getRecent($userId)
-    {
-        $connection = ConnectionManager::get('default');
-        $ids = $connection->execute('
-            SELECT 
-                messages.id
-            FROM (
-                SELECT 
-                    messages.thread_id, 
-                    max(messages.created) as created
-                FROM message_read_statuses
-                JOIN messages
-                    ON message_read_statuses.message_id = messages.id
-                WHERE message_read_statuses.user_id = ' . $userId . '
-                    AND message_read_statuses.status != ' . MessageReadStatus::TYPE_DELETED . '
-                GROUP BY messages.thread_id
-            ) AS visibles 
-            INNER JOIN threads
-                ON visibles.thread_id = threads.id
-            INNER JOIN messages
-                ON visibles.thread_id = messages.thread_id
-                AND visibles.created = messages.created
-        ')->fetchAll('assoc');
-        return Hash::extract($ids, '{n}.id');
     }
 }

@@ -68,17 +68,12 @@ class ThreadsTableTest extends TestCase
         $this->assertEquals($userId, 2);
     }
 
-    public function testFindStatus()
+    public function testFindReadStatus()
     {
         $thread = $this->Threads->find()
-            ->find('status', ['id' => 1])
+            ->find('readStatus', ['id' => 1])
             ->first();
-        $this->assertTrue($thread->status);
-    }
-
-    public function testFindSummary()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->assertTrue($thread->read);
     }
 
     public function testOpen()

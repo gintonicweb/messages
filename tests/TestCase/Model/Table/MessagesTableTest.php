@@ -111,19 +111,19 @@ class MessagesTableTest extends TestCase
         $this->assertFalse($result);
     }
 
-    public function testFindStatus()
+    public function testFindReadStatus()
     {
         $message = $this->Messages->find()
-            ->find('status', ['id' => 1])
+            ->find('readStatus', ['id' => 1])
             ->where(['id' => 1])
             ->first();
-        $this->assertTrue((boolean) $message->status);
+        $this->assertTrue($message->read);
 
         $message = $this->Messages->find()
-            ->find('status', ['id' => 2])
+            ->find('readStatus', ['id' => 2])
             ->where(['id' => 1])
             ->first();
-        $this->assertFalse((boolean) $message->status);
+        $this->assertFalse($message->read);
     }
 
     public function testGetRecent()
