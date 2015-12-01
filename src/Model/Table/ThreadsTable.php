@@ -93,6 +93,31 @@ class ThreadsTable extends Table
     }
 
     /**
+     * Dynamic finder that loads all users for a thread without me
+     *
+     * @param \Cake\ORM\Query $query the original query to append to
+     * @param array $users the list of users to be ignored
+     * @return \Cake\ORM\Query The amended query
+     */
+    public function findStatus(Query $query, array $users)
+    {
+        $query->contain(['Messages' =>function ($q) use ($users) {
+            return $q->find('status', $users);
+        }]);
+        return $query->map(function ($thread) {
+            $status = false;
+            foreach ($thread['messages'] as $message) {
+                if ($message['message_read_statuses'][0]['status']) {
+                    $status = true;
+                    break;
+                }
+            }
+            $thread['status'] = $status;
+            return $thread;
+        });
+    }
+
+    /**
      * Dynamic finder to restrict the query where at least some undeleted
      * messages exist in the thread
      *

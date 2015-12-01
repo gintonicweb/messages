@@ -10,12 +10,6 @@ use Messages\Model\Table\ThreadsTable;
  */
 class ThreadsTableTest extends TestCase
 {
-
-    /**
-     * Fixtures
-     *
-     * @var array
-     */
     public $fixtures = [
         'plugin.messages.threads',
         'plugin.messages.messages',
@@ -24,11 +18,6 @@ class ThreadsTableTest extends TestCase
         'plugin.messages.threads_users'
     ];
 
-    /**
-     * setUp method
-     *
-     * @return void
-     */
     public function setUp()
     {
         parent::setUp();
@@ -36,11 +25,6 @@ class ThreadsTableTest extends TestCase
         $this->Threads = TableRegistry::get('Threads', $config);
     }
 
-    /**
-     * tearDown method
-     *
-     * @return void
-     */
     public function tearDown()
     {
         unset($this->Threads);
@@ -48,11 +32,6 @@ class ThreadsTableTest extends TestCase
         parent::tearDown();
     }
 
-    /**
-     * Test initialize method
-     *
-     * @return void
-     */
     public function testInitialize()
     {
         $hasMany = $this->Threads->association('Messages');
@@ -61,11 +40,6 @@ class ThreadsTableTest extends TestCase
         $this->assertInstanceOf('Cake\ORM\Association\BelongsToMany', $belongsToMany);
     }
 
-    /**
-     * Test validationDefault method
-     *
-     * @return void
-     */
     public function testValidationDefault()
     {
         $thread = $this->Threads->newEntity();
@@ -73,11 +47,6 @@ class ThreadsTableTest extends TestCase
         $this->assertInstanceOf('Messages\Model\Entity\Thread', $result);
     }
 
-    /**
-     * Test findParticipating method
-     *
-     * @return void
-     */
     public function testFindParticipating()
     {
         $result = $this->Threads->find('participating', [1])
@@ -88,11 +57,6 @@ class ThreadsTableTest extends TestCase
         $this->assertEquals($result, [1]);
     }
 
-    /**
-     * Test findOtherUsers method
-     *
-     * @return void
-     */
     public function testFindOtherUsers()
     {
         $thread = $this->Threads
@@ -104,21 +68,19 @@ class ThreadsTableTest extends TestCase
         $this->assertEquals($userId, 2);
     }
 
-    /**
-     * Test findSummary method
-     *
-     * @return void
-     */
+    public function testFindStatus()
+    {
+        $thread = $this->Threads->find()
+            ->find('status', ['id' => 1])
+            ->first();
+        $this->assertTrue($thread->status);
+    }
+
     public function testFindSummary()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
 
-    /**
-     * Test open method
-     *
-     * @return void
-     */
     public function testOpen()
     {
         $this->markTestIncomplete('Not implemented yet.');
