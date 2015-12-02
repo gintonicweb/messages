@@ -1,9 +1,7 @@
 <?php
 namespace Messages\Model\Entity;
 
-use Cake\Datasource\EntityInterface;
 use Cake\ORM\Entity;
-use Cake\ORM\TableRegistry;
 
 /**
  * Thread Entity.
@@ -23,28 +21,4 @@ class Thread extends Entity
         '*' => true,
         'id' => false,
     ];
-
-    /**
-     * Add a message to the given thread and creates the matching
-     * "messageReadStatuses" for each participant.
-     *
-     * @param  \Cake\Datasource\EntityInterface $sender the user entity
-     * @param  array $messageData content of the message
-     * @return void
-     */
-    public function addMessage(EntityInterface $sender, array $messageData)
-    {
-        $messageData['user_id'] = $sender->id;
-        $messageData['thread_id'] = $this->id;
-        foreach ($this->users as $user) {
-            $messageData['message_read_statuses'][] = [
-                'user_id' => $user->id
-            ];
-        }
-        $messagesTable = TableRegistry::get('Messages.Messages');
-        $message = $messagesTable->newEntity($messageData, [
-            'associated' => ['MessageReadStatuses']
-        ]);
-        $messagesTable->save($message);
-    }
 }

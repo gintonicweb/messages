@@ -19,48 +19,80 @@ class ThreadsController extends AppController
     ];
 
     /**
-     * View method
+     * Last method, returns the last thread modified
      *
      * @return void
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
-    public function view()
+    public function last()
     {
-        if (isset($this->request->data['id'])) {
-            $id = $this->request->data['id'];
-        } else {
-            $threads = $this->Threads->find('summary', [$this->Auth->user('id')]);
-            $id = $threads->select('id')->first()->id;
-        }
+        $thread = $this->Threads
+            ->find('participating', [$this->Auth->user('id')])
+            ->find('otherUsers', [$this->Auth->user('id')])
+            ->order(['modified' => 'DESC'])
+            ->first();
 
+        $messages = $this->Threads->Messages->find()
+            ->where(['thread_id' => $thread->id])
+            ->order(['modified' => 'DESC']);
+
+
+        $this->set(compact('thread'));
+        $this->set('messages', $this->paginate($messages));
+    }
+
+    /**
+     * View method
+     *
+     * @param int $id Id of the thread to view
+     * @return void
+     * @throws \Cake\Network\Exception\NotFoundException When record not found.
+     */
+    public function view($id)
+    {
         $thread = $this->Threads
             ->find('otherUsers', [$this->Auth->user('id')])
             ->where(['Threads.id' => $id])
             ->first();
 
-        $messages = $this->Threads->Messages
-            ->find()
-            ->contain(['Users'])
-            ->where(['Messages.thread_id' => $id]);
+        $messages = $this->Threads->Messages->find()
+            ->where(['thread_id' => $thread->id])
+            ->order(['modified' => 'DESC']);
 
-        $this->set('thread', $thread);
+        $this->set(compact('thread'));
         $this->set('messages', $this->paginate($messages));
-        $this->set('_serialize', ['messages', 'thread']);
     }
 
     /**
-     * Summary method
+     * Index method
      *
      * @return void
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
-    public function summary()
+    public function index()
     {
-        $threads = $this->Threads->find('summary', [$this->Auth->user('id')]);
-        if ($threads->count() < 1) {
-            // TODO: something about that
-        }
+        $threads = $this->Threads
+            ->find('participating', [$this->Auth->user('id')])
+            ->find('otherUsers');
         $this->set('threads', $this->paginate($threads));
-        $this->set('_serialize', ['threads']);
+    }
+
+    /**
+     * Index method
+     *
+     * @return void
+     * @throws \Cake\Network\Exception\NotFoundException When record not found.
+     */
+    public function add()
+    {
+        if ($this->request->is('post', 'put')) {
+            $userId = $this->Auth->user('id');
+            $thread = $this->Threads->open($userId, $this->request->data);
+            if ($thread) {
+                $this->set(['success' => true, 'data' => $thread]);
+                return;
+            }
+        }
+        $this->set(['success' => false]);
     }
 }

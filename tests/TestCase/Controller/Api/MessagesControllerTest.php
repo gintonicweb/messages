@@ -38,6 +38,8 @@ class MessagesControllerTest extends IntegrationTestCase
     public function tearDown()
     {
         TableRegistry::remove('Messages');
+        TableRegistry::remove('Threads');
+        TableRegistry::remove('MessageReadStatuses');
     }
 
     public function testAdd()
@@ -50,6 +52,7 @@ class MessagesControllerTest extends IntegrationTestCase
 
         $this->post('/api/messages/add', $data);
         $this->assertResponseSuccess();
+
 
         $messagesTable = TableRegistry::get('Messages');
         $query = $messagesTable->find()->where(['body' => $data['body']]);

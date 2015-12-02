@@ -28,7 +28,6 @@ class ThreadsTableTest extends TestCase
     public function tearDown()
     {
         unset($this->Threads);
-
         parent::tearDown();
     }
 
@@ -78,6 +77,23 @@ class ThreadsTableTest extends TestCase
 
     public function testOpen()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $data = [
+            'thread' => [
+                'title' => 'Test Title',
+            ],
+            'message' => [
+                'body' => 'Test body',
+            ],
+            'users' => [2],
+        ];
+
+        $thread = $this->Threads->open(1, $data);
+        $result = $this->Threads
+            ->findById($thread->id)
+            ->contain(['Messages', 'Users'])
+            ->first();
+
+        $this->assertEquals(count($result->users), 2);
+        $this->assertEquals(count($result->messages), 1);
     }
 }

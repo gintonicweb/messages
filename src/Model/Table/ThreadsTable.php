@@ -60,10 +60,10 @@ class ThreadsTable extends Table
     }
 
     /**
-     * Dynamic finder that loads all users for a thread without me
+     * Dynamic finder that find threads where given users are involved
      *
      * @param \Cake\ORM\Query $query the original query to append to
-     * @param array $users the list of user ids
+     * @param array $users the list of user ids like ```[1, 2, 3]```
      * @return \Cake\ORM\Query The amended query
      */
     public function findParticipating(Query $query, array $users = null)
@@ -81,7 +81,7 @@ class ThreadsTable extends Table
      * Dynamic finder that loads all users for a thread without me
      *
      * @param \Cake\ORM\Query $query the original query to append to
-     * @param array $users the list of users to be ignored
+     * @param array $users the list of users to be ignored like ```[1, 2, 3]```
      * @return \Cake\ORM\Query The amended query
      */
     public function findOtherUsers(Query $query, array $users)
@@ -118,49 +118,41 @@ class ThreadsTable extends Table
     }
 
     /**
-     * Dynamic finder to restrict the query where at least some undeleted
-     * messages exist in the thread
+     * Creates the thread, then links the sender and reciever to it, then adds
+     * the message to the thread. The messages table is in charge of handling
+     * message read statuses
      *
-     * @param \Cake\ORM\Query $query the original query to append to
-     * @param array $users the list of users id formatted according to cake
-     * stadards
-     * @return \Cake\ORM\Query The amended query
-     */
-    public function findSummary(Query $query, array $users)
-    {
-        // Retrieve the last visible (not deleted) message for user per thread
-        $messages = $this->Messages->getRecent($users[0]);
-
-        if (empty($messages)) {
-            return $query;
-        }
-        return $query
-            ->find('otherUsers', $users)
-            ->matching('Messages', function ($q) use ($messages) {
-                return $q->where(['Messages.id IN' => $messages]);
-            });
-    }
-
-    /**
-     * Links the sender and reciever to the thread then adds the message
+     * ```
+     * $data = [
+     *     'thread' => ['title' => 'This is a title'],
+     *     'message' => ['body' => 'This is a message'],
+     *     'users' => [1,2,3,4],
+     * ]
+     * ```
+     *
      * @param int $userId Id of the sender
      * @param array $data message data
      * @return \Cake\ORM\Entity
      */
     public function open($userId, array $data)
     {
+        // Create thread
         $thread = $this->newEntity($data['thread']);
-        if (!$this->save($thread)) {
-            return false;
-        }
+        $this->save($thread);
 
+        // Retrieve users involved and adds them to the thread
         $sender = $this->Users->get($userId);
         $recipients = $this->Users->find()
             ->where(['id IN' => $data['users']])
+            ->andWhere(['id NOT IN' => $sender->id])
             ->toArray();
 
-        $this->Users->link($thread, $recipients + [$sender]);
-        $thread->addMessage($sender, $data['message']);
+        $recipients[] = $sender;
+        $this->Users->link($thread, $recipients);
+
+        // Add Message to thread
+        $message = $this->Messages->add($sender, $thread, $data['message']);
+        $thread->messages = [$message];
         return $thread;
     }
 }

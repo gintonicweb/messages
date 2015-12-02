@@ -113,21 +113,37 @@ class MessagesTableTest extends TestCase
 
     public function testFindReadStatus()
     {
-        $message = $this->Messages->find()
+        $message = $this->Messages
             ->find('readStatus', ['id' => 1])
             ->where(['id' => 1])
             ->first();
         $this->assertTrue($message->read);
 
-        $message = $this->Messages->find()
+        $message = $this->Messages
             ->find('readStatus', ['id' => 2])
             ->where(['id' => 1])
             ->first();
         $this->assertFalse($message->read);
     }
 
-    public function testGetRecent()
+    public function testAdd()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $user = $this->Messages->Users->find()->first();
+        $thread = $this->Messages->Threads->find()->first();
+        $data = [
+            'body' => 'This is a test message',
+        ];
+
+        $result = $this->Messages->add($user, $thread, $data);
+        $this->assertTrue((bool)$result);
+
+        $result = $this->Messages->find()
+            ->where(['body' => $data['body']])
+            ->contain(['Users', 'MessageReadStatuses', 'Threads'])
+            ->first();
+
+        $this->assertEquals($result->user->id, $user->id);
+        $this->assertEquals(count($result->message_read_statuses), 2);
+        $this->assertEquals($result->thread->id, $thread->id);
     }
 }

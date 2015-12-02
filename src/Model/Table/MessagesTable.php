@@ -123,4 +123,36 @@ class MessagesTable extends Table
             });
         });
     }
+
+    /**
+     * Adds a message to the given thread and creates the matching
+     * "messageReadStatuses" for each participant.
+     *
+     * @param  \Cake\ORM\Entity $sender the user sending the message
+     * @param  \Cake\ORM\Entity $thread the thread on which the message is sent
+     * @param  array $messageData content of the message
+     * @return \Cake\ORM\Entity|bool The newly created entity or false on fail
+     */
+    public function add(Entity $sender, Entity $thread, array $messageData)
+    {
+        $messageData['user_id'] = $sender->id;
+        $messageData['thread_id'] = $thread->id;
+
+        if (!isset($thread->users)) {
+            $thread = $this->Threads->find()
+                ->where(['id' => $thread->id])
+                ->contain(['Users'])
+                ->first();
+        }
+
+        foreach ($thread->users as $user) {
+            $messageData['message_read_statuses'][] = [
+                'user_id' => $user->id
+            ];
+        }
+        $message = $this->newEntity($messageData, [
+            'associated' => ['MessageReadStatuses']
+        ]);
+        return $this->save($message);
+    }
 }
