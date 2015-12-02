@@ -118,7 +118,7 @@ class MessagesTable extends Table
         }]);
         return $query->formatResults(function ($messages) {
             return $messages->map(function ($message) {
-                $message['read'] = $message['message_read_statuses'][0]['read'];
+                $message['opened'] = $message['message_read_statuses'][0]['opened'];
                 return $message;
             });
         });

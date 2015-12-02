@@ -20,7 +20,7 @@ class MessageReadStatusesFixture extends TestFixture
         'id' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => false, 'default' => null, 'comment' => '', 'autoIncrement' => true, 'precision' => null],
         'message_id' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null, 'autoIncrement' => null],
         'user_id' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null, 'autoIncrement' => null],
-        'read' => ['type' => 'boolean', 'length' => null, 'null' => false, 'default' => '0', 'comment' => '', 'precision' => null],
+        'opened' => ['type' => 'boolean', 'length' => null, 'null' => false, 'default' => '0', 'comment' => '', 'precision' => null],
         'deleted' => ['type' => 'boolean', 'length' => null, 'null' => false, 'default' => '0', 'comment' => '', 'precision' => null],
         'created' => ['type' => 'datetime', 'length' => null, 'null' => true, 'default' => null, 'comment' => '', 'precision' => null],
         'modified' => ['type' => 'datetime', 'length' => null, 'null' => true, 'default' => null, 'comment' => '', 'precision' => null],
@@ -43,7 +43,7 @@ class MessageReadStatusesFixture extends TestFixture
         [
             'message_id' => 1,
             'user_id' => 1,
-            'read' => true,
+            'opened' => true,
             'deleted' => false,
             'created' => '2015-10-10 03:42:07',
             'modified' => '2015-10-10 03:42:07'
@@ -51,7 +51,7 @@ class MessageReadStatusesFixture extends TestFixture
         [
             'message_id' => 1,
             'user_id' => 2,
-            'read' => false,
+            'opened' => false,
             'deleted' => false,
             'created' => '2015-10-10 03:42:07',
             'modified' => '2015-10-10 03:42:07'
@@ -59,7 +59,7 @@ class MessageReadStatusesFixture extends TestFixture
         [
             'message_id' => 2,
             'user_id' => 1,
-            'read' => false,
+            'opened' => false,
             'deleted' => false,
             'created' => '2015-10-10 03:42:07',
             'modified' => '2015-10-10 03:42:07'
@@ -67,7 +67,7 @@ class MessageReadStatusesFixture extends TestFixture
         [
             'message_id' => 2,
             'user_id' => 2,
-            'read' => false,
+            'opened' => false,
             'deleted' => false,
             'created' => '2015-10-10 03:42:07',
             'modified' => '2015-10-10 03:42:07'

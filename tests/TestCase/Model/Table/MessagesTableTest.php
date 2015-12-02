@@ -117,13 +117,13 @@ class MessagesTableTest extends TestCase
             ->find('readStatus', ['id' => 1])
             ->where(['id' => 1])
             ->first();
-        $this->assertTrue($message->read);
+        $this->assertTrue($message->opened);
 
         $message = $this->Messages
             ->find('readStatus', ['id' => 2])
             ->where(['id' => 1])
             ->first();
-        $this->assertFalse($message->read);
+        $this->assertFalse($message->opened);
     }
 
     public function testAdd()

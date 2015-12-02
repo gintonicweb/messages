@@ -72,7 +72,7 @@ class ThreadsTableTest extends TestCase
         $thread = $this->Threads->find()
             ->find('readStatus', ['id' => 1])
             ->first();
-        $this->assertTrue($thread->read);
+        $this->assertTrue($thread->opened);
     }
 
     public function testOpen()

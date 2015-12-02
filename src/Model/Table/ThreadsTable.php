@@ -105,14 +105,14 @@ class ThreadsTable extends Table
             return $q->find('readStatus', $users);
         }]);
         return $query->map(function ($thread) {
-            $read = false;
+            $opened = false;
             foreach ($thread['messages'] as $message) {
-                if ($message['message_read_statuses'][0]['read']) {
-                    $read = true;
+                if ($message['message_read_statuses'][0]['opened']) {
+                    $opened = true;
                     break;
                 }
             }
-            $thread['read'] = $read;
+            $thread['opened'] = $opened;
             return $thread;
         });
     }
