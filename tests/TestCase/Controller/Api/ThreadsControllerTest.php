@@ -60,6 +60,7 @@ class ThreadsControllerTest extends IntegrationTestCase
         // Assert that only other users are shown in the thread
         $this->assertEquals(count($result['threads'][0]['users']), 1);
         $this->assertEquals($result['threads'][0]['users'][0]['id'], 2);
+        $this->assertTrue(isset($result['threads'][0]['messages']));
     }
 
     public function testLatest()
@@ -82,6 +83,7 @@ class ThreadsControllerTest extends IntegrationTestCase
 
         $this->assertEquals($result['thread']['id'], 1);
         $this->assertEquals(count($result['messages']), 2);
+        $this->assertTrue(isset($result['messages'][0]['user']), 1);
     }
 
     public function testAdd()

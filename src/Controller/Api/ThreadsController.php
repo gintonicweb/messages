@@ -56,6 +56,7 @@ class ThreadsController extends AppController
             ->first();
 
         $messages = $this->Threads->Messages->find()
+            ->contain(['Users'])
             ->where(['thread_id' => $thread->id])
             ->order(['Messages.created' => 'DESC']);
 
@@ -73,7 +74,10 @@ class ThreadsController extends AppController
     {
         $threads = $this->Threads
             ->find('participating', [$this->Auth->user('id')])
-            ->find('otherUsers');
+            ->find('otherUsers')
+            ->contain(['Messages' => function ($q) {
+                return $q->limit(1);
+            }]);
         $this->set('threads', $this->paginate($threads));
     }
 
