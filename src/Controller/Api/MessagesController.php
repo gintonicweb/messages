@@ -17,18 +17,19 @@ class MessagesController extends AppController
      */
     public function add()
     {
-        $message = $this->Messages->newEntity();
         $status = 'error';
 
         if ($this->request->is('post')) {
-            $this->request->data['user_id'] = $this->Auth->user('id');
-            $message = $this->Messages->patchEntity($message, $this->request->data);
-            if ($this->Messages->save($message)) {
+            $message = $this->Messages->add(
+                $this->Auth->user('id'),
+                $this->request->data['thread_id'],
+                $this->request->data
+            );
+            if ($message) {
                 $status = 'success';
             }
         }
 
-        $message->user = $this->Auth->user();
         $this->set(compact('status'));
         $this->set('_serialize', ['status']);
         $this->set('_ws', [

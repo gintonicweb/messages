@@ -46,7 +46,7 @@ class MessagesControllerTest extends IntegrationTestCase
     {
         $data = [
             'user_id' => 1,
-            'thread_id' => 1,
+            'thread_id' => 3,
             'body' => 'This is a new message',
         ];
 
@@ -58,5 +58,8 @@ class MessagesControllerTest extends IntegrationTestCase
         $query = $messagesTable->find()->where(['body' => $data['body']]);
 
         $this->assertEquals($query->count(), 1);
+
+        $message = $query->first()->toArray();
+        $this->assertEquals($message['thread_id'], $data['thread_id']);
     }
 }

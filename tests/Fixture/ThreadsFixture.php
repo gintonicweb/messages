@@ -39,13 +39,18 @@ class ThreadsFixture extends TestFixture
     public $records = [
         [
             'title' => 'Lorem ipsum dolor sit amet',
-            'created' => '2015-10-10 03:38:20',
-            'modified' => '2015-10-10 03:38:20'
+            'created' => '2015-10-10 00:00:00',
+            'modified' => '2015-10-10 00:00:00'
         ],
         [
             'title' => 'This is a thread with no users',
-            'created' => '2015-10-10 03:38:20',
-            'modified' => '2015-10-10 03:38:20'
+            'created' => '2015-10-10 00:00:00',
+            'modified' => '2015-10-10 00:00:00'
+        ],
+        [
+            'title' => 'This thread has 2 users and no messages',
+            'created' => '2015-10-11 00:00:00',
+            'modified' => '2015-10-11 00:00:00'
         ],
     ];
 }

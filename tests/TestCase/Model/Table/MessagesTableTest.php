@@ -102,7 +102,7 @@ class MessagesTableTest extends TestCase
 
         $data = [
             'user_id' => 1,
-            'thread_id' => 3,
+            'thread_id' => 100,
             'body' => 'This is a new message',
         ];
         $message = $this->Messages->newEntity();

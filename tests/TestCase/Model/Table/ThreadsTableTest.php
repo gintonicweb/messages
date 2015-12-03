@@ -53,7 +53,7 @@ class ThreadsTableTest extends TestCase
             ->extract('id')
             ->toArray();
 
-        $this->assertEquals($result, [1]);
+        $this->assertEquals($result, [1, 3]);
     }
 
     public function testFindOtherUsers()

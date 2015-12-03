@@ -24,17 +24,17 @@ class ThreadsController extends AppController
      * @return void
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
-    public function last()
+    public function latest()
     {
         $thread = $this->Threads
             ->find('participating', [$this->Auth->user('id')])
             ->find('otherUsers', [$this->Auth->user('id')])
-            ->order(['modified' => 'DESC'])
+            ->order(['Threads.modified' => 'DESC'])
             ->first();
 
         $messages = $this->Threads->Messages->find()
             ->where(['thread_id' => $thread->id])
-            ->order(['modified' => 'DESC']);
+            ->order(['Messages.created' => 'DESC']);
 
 
         $this->set(compact('thread'));
@@ -57,7 +57,7 @@ class ThreadsController extends AppController
 
         $messages = $this->Threads->Messages->find()
             ->where(['thread_id' => $thread->id])
-            ->order(['modified' => 'DESC']);
+            ->order(['Messages.created' => 'DESC']);
 
         $this->set(compact('thread'));
         $this->set('messages', $this->paginate($messages));

@@ -17,7 +17,7 @@ class Messages extends AbstractMigration
                 'limit' => 11,
                 'null' => false,
             ])
-            ->addColumn('read', 'boolean', [
+            ->addColumn('opened', 'boolean', [
                 'default' => false,
                 'limit' => null,
                 'null' => false,

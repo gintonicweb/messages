@@ -48,20 +48,40 @@ class ThreadsControllerTest extends IntegrationTestCase
 
     public function testIndex()
     {
-        $response = $this->get('/api/threads/index.json');
+        $this->get('/api/threads/index.json');
         $this->assertResponseSuccess();
+
+        $result = json_decode($this->_response->body(), true);
+
+        // Assert that we only get the thread we're participating in
+        $this->assertEquals(count($result['threads']), 2);
+        $this->assertEquals($result['threads'][0]['id'], 1);
+
+        // Assert that only other users are shown in the thread
+        $this->assertEquals(count($result['threads'][0]['users']), 1);
+        $this->assertEquals($result['threads'][0]['users'][0]['id'], 2);
     }
 
     public function testLatest()
     {
-        $response = $this->get('/api/threads/index.json');
+        $this->get('/api/threads/latest.json');
         $this->assertResponseSuccess();
+
+        $result = json_decode($this->_response->body(), true);
+
+        $this->assertEquals($result['thread']['id'], 3);
+        $this->assertTrue(isset($result['messages']));
     }
 
     public function testView()
     {
-        $response = $this->get('/api/threads/index.json');
+        $response = $this->get('/api/threads/view/1.json');
         $this->assertResponseSuccess();
+
+        $result = json_decode($this->_response->body(), true);
+
+        $this->assertEquals($result['thread']['id'], 1);
+        $this->assertEquals(count($result['messages']), 2);
     }
 
     public function testAdd()
@@ -79,7 +99,6 @@ class ThreadsControllerTest extends IntegrationTestCase
             ->contain(['Messages' => ['MessageReadStatuses']])
             ->first();
 
-        $this->markTestIncomplete('Not implemented yet.');
         $this->assertEquals(count($thread), 1);
         $this->assertEquals(count($thread->messages), 1);
         $this->assertEquals(count($thread->messages[0]->message_read_statuses), 2);
