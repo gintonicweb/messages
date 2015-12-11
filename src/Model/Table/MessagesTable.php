@@ -105,13 +105,13 @@ class MessagesTable extends Table
     }
 
     /**
-     * Adds the 'read' property to the messages
+     * adds the 'read' property to the messages
      *
-     * @param \Cake\ORM\Query $query the original query to append to
+     * @param \cake\orm\query $query the original query to append to
      * @param array $users the user id like ```['id' => 1]```
-     * @return \Cake\ORM\Query The amended query
+     * @return \cake\orm\query the amended query
      */
-    public function findReadStatus(Query $query, array $users = null)
+    public function findreadstatus(query $query, array $users = null)
     {
         $query->contain(['MessageReadStatuses' => function ($q) use ($users) {
             return $q->where(['MessageReadStatuses.user_id' => $users['id']]);
@@ -138,8 +138,8 @@ class MessagesTable extends Table
         if (is_int($sender)) {
             $sender = $this->Users->get($sender);
         }
-        if (is_int($thread) || !isset($thread->users)) {
-            $thread = is_int($thread) ? $thread : $thread->id;
+        if (!is_object($thread) || !isset($thread->users)) {
+            $thread = is_object($thread) ? $thread->id : (int)$thread;
             $thread = $this->Threads->find()
                 ->where(['Threads.id' => $thread])
                 ->contain(['Users'])

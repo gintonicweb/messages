@@ -145,5 +145,10 @@ class MessagesTableTest extends TestCase
         $this->assertEquals($result->user->id, $user->id);
         $this->assertEquals(count($result->message_read_statuses), 2);
         $this->assertEquals($result->thread->id, $thread->id);
+
+        $result = $this->Messages->add($user, (int)$thread->id, $data);
+        $this->assertTrue((bool)$result);
+        $result = $this->Messages->add($user, (string)$thread->id, $data);
+        $this->assertTrue((bool)$result);
     }
 }
