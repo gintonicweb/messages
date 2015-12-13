@@ -26,6 +26,7 @@ class MessagesController extends AppController
                 $this->request->data
             );
             if ($message) {
+                $message->user = $this->Messages->Users->get($message->user_id);
                 $status = 'success';
             }
         }

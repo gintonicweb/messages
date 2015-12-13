@@ -61,5 +61,8 @@ class MessagesControllerTest extends IntegrationTestCase
 
         $message = $query->first()->toArray();
         $this->assertEquals($message['thread_id'], $data['thread_id']);
+
+        $viewVariables = $this->viewVariable('_ws');
+        $this->assertEquals($viewVariables['data']['user']['id'], $data['user_id']);
     }
 }
